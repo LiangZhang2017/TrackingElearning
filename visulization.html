@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Tracking Students’ Dialogue Activities in AutoTutor</title>
+      <script src="/socket.io/socket.io.js"></script>
+      <link rel="stylesheet" type="text/css" href="http://dc-js.github.io/dc.js/css/dc.css"/>
+      <script type="text/javascript" src="http://dc-js.github.io/dc.js/js/d3.js"></script>
+      <script type="text/javascript" src="http://dc-js.github.io/dc.js/js/crossfilter.js"></script>
+      <script type="text/javascript" src="http://dc-js.github.io/dc.js/js/dc.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.2/Chart.min.js"></script>
+
+      
+      <style type="text/css">
+               .div0{
+         width: 200px;
+         height:50px;
+         float:left;
+         border-style:solid;
+         border-width:1px;
+         margin-top:10px;
+         margin-right:10px;
+		 overflow:auto;
+         }
+
+         .div00{
+         width: 1600px;
+         height:50px;
+         float:left;
+         border-style:solid;
+         border-width:1px;
+         margin-top:10px;
+         margin-right:10px;
+		 overflow:auto;
+         }
+
+         .div1{
+         width: 900px;
+         height:400px;
+         float:left;
+         border-style:solid;
+         border-width:1px;
+         margin-top:10px;
+         margin-right:10px;
+		 overflow:auto;
+         }
+		 
+		.div2{
+		width: 800px;
+		height:400px;
+		float:left;
+		border-style:solid;
+		border-width:1px;
+		margin-top:10px;
+		margin-right: 15px;
+		}
+
+      .div3{
+		width: 750px;
+		height:350px;
+		float:left;
+		border-style:solid;
+		border-width:1px;
+		margin-top:10px;
+		margin-right: 15px;
+		}
+
+      .div3_1{
+		width: 600px;
+		height:350px;
+		float:left;
+		border-style:solid;
+		border-width:1px;
+		margin-top:10px;
+		margin-right: 15px;
+      overflow:auto;
+		}
+
+      .div4{
+		width: 300px;
+		height:350px;
+		float:left;
+		border-style:solid;
+		border-width:1px;
+		margin-top:10px;
+		margin-right: 15px;
+      overflow:auto;
+		}
+      </style>
+   </head>
+	
+   <body>
+      <div class="div0" id="title">Students Infor </div>
+      <div class="div00" id="class"> Classname</div>
+        <div class="div1" id="actions-container">This is the actions</div>
+        <div class="div2" id="chart-container">Student1 Score will render here</div>
+        <div class="div3" id="Latency-container">Latency chart</div>
+        <script src="bundle.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <div class="div3_1" id="Questions">Questions</div>
+        <div class="div4" id="Summary-Table">Summary Table</div>
+   </body>
+
+   <script>
+      var socket = io();
+      socket.on('actions', function(msg){
+         msg.reverse();
+         document.getElementById('actions-container').innerHTML="";
+         msg.forEach(element => $('#actions-container').append($('<li>').text(element)));
+         
+      });
+
+      socket.on('StudentNames', function(msg){
+         msg.reverse();
+         document.getElementById('title').innerHTML="";
+         msg.forEach(element => $('#title').append($('<li>').text(element)));
+         
+      });
+
+      socket.on('ClassNames', function(msg){
+         msg.reverse();
+         document.getElementById('class').innerHTML="";
+         msg.forEach(element => $('#class').append($('<li>').text(element)));
+         
+      });
+
+      socket.on('summary', function(msg){
+         jsonDate=msg;
+         var showTime = new Date();
+         jsonDate["showTime"]=showTime;
+         document.getElementById('Summary-Table').innerHTML= JSON.stringify(jsonDate);
+      });
+
+      socket.on('visualQAs', function(msg){
+         msg.reverse();
+         document.getElementById('Questions').innerHTML="";
+         msg.forEach(element => $('#Questions').append($('<li>').text(element)));
+         
+      });
+      
+      //////////////////////////////////////////////////////////////////////////////////
+      // socket.on('latencys', function(data){
+      //    var yearRingChart   = dc.pieChart("#pieLatency");
+      //    var xfilter = crossfilter(data);
+      //    var yearDim  = xfilter.dimension(function(d) {return +d.question;});
+      //    var spendDim = xfilter.dimension(function(d) {return Math.floor(d.latency/10);});
+      //    var spendPerYear = yearDim.group().reduceSum(function(d) {return +d.latency;});
+
+      //    function render_plots(){
+      //       yearRingChart
+      //          .width(200).height(200)
+      //          .dimension(yearDim)
+      //          .group(spendPerYear)
+      //          .innerRadius(50);
+      //       dc.renderAll();
+      //    }
+
+      //    render_plots();
+         
+      // });
+
+      // socket.on('latencys', function(data){
+
+      // })
+   </script>
+
+</html>
